@@ -7,10 +7,10 @@ sudo -v
 
 trap 'sudo -k' EXIT
 
-# Navigate to your project directory
-cd ${HOME}/Documents/Configs
+# Navigate to your project directory, here is one in $HOME, for example
+cd ${HOME}/Your/Dir/Here
 
-# synchronize this with your image name
+# synchronize this with your image name, here it is just set to my example for consistency
 IMAGE="localhost/my-kinoite-image-name"
 LATEST="${IMAGE}:latest"
 PREVIOUS="${IMAGE}:previous"
