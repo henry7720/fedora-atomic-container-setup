@@ -8,7 +8,7 @@ trap 'sudo -k' EXIT
 
 cd "${HOME}/Documents/Configs"
 
-IMAGE="localhost/henry-os"
+IMAGE="localhost/my-kinoite-image-name"
 LATEST="${IMAGE}:latest"
 PREVIOUS="${IMAGE}:previous"
 
