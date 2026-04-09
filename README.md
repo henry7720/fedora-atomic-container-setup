@@ -21,6 +21,8 @@ Essentially the workflow is:
 8. future upgrades involve running a script to rebuild the OS anytime with rollbacks still supported easily: `./rebuild-system-bootc.sh`
 In script directory, there's a one-time setup: `chmod +x rebuild-system-bootc.sh`
 
+Aside, a useful command to see your /etc differences with base image: `sudo ostree admin config-diff`
+
 Note: there is a known bug with the script where old images are not being pruned. In that case once you have a latest and previous present after booting into your newest deployment, you can forcibly and safely remove it with podman, by its image ID.
 
 Note: all features implemented in the script could be done manually. In that case, in general, you start in project directory, rebuild the image with the initial build command, bootc update (assuming the tag is the same, run the switch command above for a new tag name) and retag the old image to ensure it doesn't get erased. You would then be in charge of any hanging images and being sure that things work as expected.
