@@ -29,7 +29,7 @@ RUN dnf -y install \
     dnf -y install --setopt=install_weak_deps=False \
     podman-compose podman-docker \
     k3b cdrskin \
-    cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts terminus-fonts-console \
+    cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts \
     btop \
     tailscale \
     codium \
