@@ -25,8 +25,9 @@ RUN dnf -y install \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
     btrfs-assistant && \
+    dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install --setopt=install_weak_deps=False \
-    distrobox podman-compose podman-docker \
+    podman-compose podman-docker \
     k3b cdrskin \
     cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts terminus-fonts-console \
     btop \
