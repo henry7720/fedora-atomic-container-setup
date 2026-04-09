@@ -8,7 +8,7 @@ Essentially the workflow is:
 
 1. run/install Fedora atomic desktop of your choosing
 2. update the system on/to 43
-2. if applicabke document your packages you custom-installed with `rpm-ostree status`
+2. if applicable document your packages you custom-installed with `rpm-ostree status`
 3. with that, you now need to run `rpm-ostree reset`
 4. run a `reboot`
 5. in fresh booted system, pin your cleaned rpm-ostree as a base to revert to anytime: `sudo ostree admin pin 0`
