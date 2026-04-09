@@ -42,10 +42,10 @@ if [ -n "$OLD_ID" ]; then
     fi
 fi
 
-echo -e "\n=== 4. Cleaning Up Leaf Images ==="
-sudo podman image prune -f
-
-echo -e "\n=== 5. Staging Update with bootc ==="
+echo -e "\n=== 4. Staging Update with bootc ==="
 sudo bootc update
 
 echo -e "\n=== If update applied, reboot at your leisure! ==="
+
+echo -e "\n=== 5. Cleaning Up Leaf Images ==="
+sudo podman image prune -f
