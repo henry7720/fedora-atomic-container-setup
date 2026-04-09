@@ -23,8 +23,6 @@ In script directory, there's a one-time setup: `chmod +x rebuild-system-bootc.sh
 
 Aside, a useful command to see your /etc differences with base image: `sudo ostree admin config-diff`
 
-Note: there is a known bug with the script where old images are not being pruned. In that case once you have a latest and previous present after booting into your newest deployment, you can forcibly and safely remove it with podman, by its image ID.
-
 Note: all features implemented in the script could be done manually. In that case, in general, you start in project directory, rebuild the image with the initial build command, bootc update (assuming the tag is the same, run the switch command above for a new tag name) and retag the old image to ensure it doesn't get erased. You would then be in charge of any hanging images and being sure that things work as expected.
 
 Therefore, for automating this rebuild step and `bootc` image update, etc., I built a script with some handy variables to handle this handshake, generally to be run in the same folder as the `Containerfile` for build purposes. Be sure to edit the variables for image name at the top of the script to whatever you'd like. Ensure it matches your custom-switched `bootc`. The `cd` command is provided for convenience in the script to ensure that the build works properly. Be sure to set it if you'd like, otherwise you can just comment out that line or remove it.
