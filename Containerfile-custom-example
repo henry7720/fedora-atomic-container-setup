@@ -20,7 +20,14 @@ EOF
 # Your 'overlay' packages go here, including rpmfusion.
 # The section for weak dependencies could be removed and all folded into the regular install if you don't care about cleaning weak deps.
 # Cache cleanup is good because why write things that won't be useful?
-RUN dnf -y install \
+RUN dnf remove -y \
+    krfb \
+    kjournald \
+    kdebugsettings \
+    kde-partitionmanager \
+    kde-connect \
+    kfind && \
+    dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
