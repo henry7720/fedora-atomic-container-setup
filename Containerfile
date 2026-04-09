@@ -23,10 +23,10 @@ EOF
 RUN dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     virt-manager libayatana-appindicator-gtk3 \
-    gparted && \
+    gparted \
+    btrfs-assistant && \
     dnf -y install --setopt=install_weak_deps=False \
     distrobox podman-compose podman-docker \
-    btrfs-assistant \
     k3b cdrskin \
     cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts terminus-fonts-console \
     btop \
