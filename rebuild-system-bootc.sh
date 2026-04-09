@@ -49,4 +49,4 @@ if [ -n "${UNSEATED_ID}" ] && [ "${UNSEATED_ID}" != "${OLD_LATEST}" ]; then
     fi
 fi
 
-echo -e "\n=== Done! Reboot at your leisure. ==="
+echo -e "\n=== Done! If an update was applied in bootc, reboot at your leisure. ==="
