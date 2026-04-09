@@ -16,8 +16,8 @@ Essentially the workflow is:
 3. with that, you now need to run `rpm-ostree reset`
 4. run a `reboot`
 5. in fresh booted system, pin your cleaned `rpm-ostree` setup as a base to revert to anytime: `sudo ostree admin pin 0`
-6. edit the `Containerfile` or build a new one using mine (`Containerfile-custom` as a template, as you see fit. For most people, simply adding packages to `Containerfile` will suffice.
-7. run an initial, one-time podman build off your container file under sudo in your `Containerfile`'s directory (name is customizable): `sudo podman build --pull=newer -t localhost/my-kinoite-image-name:latest .` then you need to switch to your image tag of your custom image like so (this can easily be a one-time setup): `sudo bootc switch --transport containers-storage localhost/my-kinoite-image-name:latest`
+6. edit the `Containerfile` or build a new one using mine (`Containerfile-custom-example` as a template, as you see fit. For most people, simply adding packages to `Containerfile` will suffice.
+7. run an initial, one-time podman build off your container file under sudo in your `Containerfile`'s directory (name is customizable but should be consistent!): `sudo podman build --pull=newer -t localhost/my-kinoite-image-name:latest .` then you need to switch to your image tag of your custom image like so (this can easily be a one-time setup): `sudo bootc switch --transport containers-storage localhost/my-kinoite-image-name:latest`
 8. future upgrades involve running a script to rebuild the OS anytime with rollbacks still supported easily: `./rebuild-system-bootc.sh`
 In script directory, there's a one-time setup: `chmod +x rebuild-system-bootc.sh`
 
