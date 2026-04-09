@@ -1,0 +1,54 @@
+# Start from the official Fedora 44 Kinoite OCI image
+FROM quay.io/fedora/fedora-kinoite:44
+
+# Add your custom packages
+# Since we're using bootc, we use standard dnf commands
+
+# Add repos here before install, for example, vscodium/vscode
+RUN tee /etc/yum.repos.d/vscodium.repo << 'EOF'
+[gitlab.com_paulcarroty_vscodium_repo]
+name=gitlab.com_paulcarroty_vscodium_repo
+baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+metadata_expire=1h
+EOF
+
+# standard URL: https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm but force it to version to avoid bugs for prerelease
+# Your 'overlay' packages go here, including rpmfusion.
+# The section for weak dependencies could be removed and all folded into the regular install if you don't care about cleaning weak deps.
+# Cache cleanup is good because why write things that won't be useful?
+RUN dnf -y install \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
+    virt-manager libayatana-appindicator-gtk3 \
+    gparted && \
+    dnf -y install --setopt=install_weak_deps=False \
+    distrobox podman-compose podman-docker \
+    btrfs-assistant \
+    k3b cdrskin \
+    cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts terminus-fonts-console \
+    btop \
+    tailscale \
+    codium \
+    pipewire-codec-aptx \
+    trash-cli \
+    micro vim \
+    java-devel && \
+    dnf clean all -y
+
+# Custom services or none at all can go here as Fedora default-enables most.
+# Here I use my preference to secure sshd and enable tailscale :D, other 
+RUN systemctl enable tailscaled.service && \
+    systemctl mask sshd.socket sshd.service
+
+# Here you can run any image-layer-level /etc overrides. Useful if you don't want to have to think about these.
+# For example, if needed, can set locale.conf with a default val: echo "LANG=\"en_US.UTF-8\"" > /etc/locale.conf
+# In general, not usually necessary for most people, but YMMV. You can always do these configs manually.
+RUN touch /etc/containers/nodocker && \
+    echo "XMODIFIERS=@im=fcitx" >> /etc/environment && \
+    echo "export XMODIFIERS=@im=fcitx" > /etc/profile.d/fcitx.sh
+
+# Important: Label the image as bootc-compatible
+LABEL containers.bootc=1
