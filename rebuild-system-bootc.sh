@@ -1,51 +1,51 @@
 #!/usr/bin/env bash
 
-# Exit immediately if any command fails
-set -e
+# Strict mode: Exit on error, undefined vars, or pipe failures
+set -euo pipefail
 
 sudo -v
-
 trap 'sudo -k' EXIT
 
-# Navigate to your project directory, here is one in $HOME, for example
-cd ${HOME}/Your/Dir/Here
+cd "${HOME}/Documents/Configs"
 
-# synchronize this with your image name, here it is just set to my example for consistency
-IMAGE="localhost/my-kinoite-image-name"
+IMAGE="localhost/henry-os"
 LATEST="${IMAGE}:latest"
 PREVIOUS="${IMAGE}:previous"
 
-echo "=== 1. Capturing Current State ==="
-# Get the unique Image ID of the current latest (returns empty if none exists)
-OLD_ID=$(sudo podman images -q "${LATEST}")
+# 1. Silently capture pre-build state using digests
+OLD_LATEST=$(sudo podman image inspect -f '{{.Digest}}' "${LATEST}" 2>/dev/null || true)
+OLD_PREVIOUS=$(sudo podman image inspect -f '{{.Digest}}' "${PREVIOUS}" 2>/dev/null || true)
 
-if [ -n "$OLD_ID" ]; then
-    echo "Current ${LATEST} ID: ${OLD_ID}"
-else
-    echo "No existing ${LATEST} found."
-fi
-
-echo -e "\n=== 2. Building Image (Pulling if Needed) ==="
+echo "=== 1. Building Image ==="
 sudo podman build --pull=newer -t "${LATEST}" .
 
-echo -e "\n=== 3. Managing Tag Rotation ==="
-# Get the Image ID of latest after the build
-NEW_ID=$(sudo podman images -q "${LATEST}")
+NEW_LATEST=$(sudo podman image inspect -f '{{.Digest}}' "${LATEST}" 2>/dev/null || true)
+UNSEATED=""
 
-if [ -n "$OLD_ID" ]; then
-    if [ "$OLD_ID" != "$NEW_ID" ]; then
-        echo "Changes detected! Tagging the old image as ${PREVIOUS}..."
-        # Tag the specific old ID so it isn't lost
-        sudo podman tag "${OLD_ID}" "${PREVIOUS}"
+echo "=== 2. Managing Tags ==="
+if [ -n "${OLD_LATEST}" ] && [ "${OLD_LATEST}" != "${NEW_LATEST}" ]; then
+    echo "-> Changes built. Tagging old :latest as :previous..."
+    sudo podman tag "${OLD_LATEST}" "${PREVIOUS}"
+    UNSEATED="${OLD_PREVIOUS}"
+else
+    echo "-> No changes detected. Tags remain unchanged."
+fi
+
+echo -e "\n=== 3. Staging bootc Update ==="
+sudo bootc update
+
+echo -e "\n=== 4. Cleaning Up ==="
+# If we unseated an image, and it's not somehow identical to the old latest, process it
+if [ -n "${UNSEATED}" ] && [ "${UNSEATED}" != "${OLD_LATEST}" ]; then
+    DIGEST="${UNSEATED#sha256:}"
+
+    # Check if bootc status still references this exact string
+    if ! sudo bootc status | grep -qF "${DIGEST}"; then
+        echo "-> Unseated image (${DIGEST:0:12}...) is detached from bootc. Removing..."
+        sudo podman rmi -f "${UNSEATED}" 2>/dev/null || echo "   Image already pruned."
     else
-        echo "No changes in build. Preserving your existing ${PREVIOUS}."
+        echo "-> Unseated image is still pinned by bootc (Rollback). Preserving."
     fi
 fi
 
-echo -e "\n=== 4. Staging Update with bootc ==="
-sudo bootc update
-
-echo -e "\n=== If update applied, reboot at your leisure! ==="
-
-echo -e "\n=== 5. Cleaning Up Leaf Images ==="
-sudo podman image prune -f
+echo -e "\n=== Done! Reboot at your leisure. ==="
