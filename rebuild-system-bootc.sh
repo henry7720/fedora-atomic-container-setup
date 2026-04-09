@@ -6,7 +6,8 @@ set -euo pipefail
 sudo -v
 trap 'sudo -k' EXIT
 
-cd "${HOME}/Documents/Configs"
+# Put your Containerfile's path here
+cd "${HOME}/Path/To/Build-File"
 
 IMAGE="localhost/my-kinoite-image-name"
 LATEST="${IMAGE}:latest"
