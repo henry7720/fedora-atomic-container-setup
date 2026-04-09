@@ -49,4 +49,7 @@ if [ -n "${UNSEATED_ID}" ] && [ "${UNSEATED_ID}" != "${OLD_LATEST}" ]; then
     fi
 fi
 
+echo "-> Cleaning up old images "
+sudo podman image prune -f
+
 echo -e "\n=== Done! If an update was applied in bootc, reboot at your leisure. ==="
