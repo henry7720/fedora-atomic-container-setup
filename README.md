@@ -6,6 +6,8 @@ Because I haven't found much good documentation for this migration on Fedora I f
 
 In this setup, `rpm-ostree` is obsoleted for the most part except for seeing old deployments (although `bootc` can do this too). For example, to see deployments in `bootc` merely run `sudo bootc status` and to rollback to an older custom deployment it is as simple as `sudo bootc rollback`. Basically, ignore `rpm-ostree` as the flow has changed. All images can be managed with podman, erased, etc. Just be careful not to erase deployments that are in use.
 
+Note: if you are using a different login shell than bash, you MUST chsh back to bash for root and your user before attempting these steps, otherwise you won't be able to even login.
+
 *Note*: this can 100% be customized with more complex flows, versioned release tags, registry-uploads, etc. That's all up to you!
 
 Essentially the workflow is:
