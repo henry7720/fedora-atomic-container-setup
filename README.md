@@ -14,6 +14,10 @@ Essentially the workflow is:
 then you need to switch to your image tag of your custom image like so (can be a one-time command run):
 `sudo bootc switch --transport containers-storage localhost/my-kinoite-image-name:latest`
 
-This way, to update your system/change base system customizations you simply rebuild your `Containerfile` and if you keep it with the same tag (acting as a release channel), you merely may run `sudo bootc update`. Ultimately, to ensure you don't lose your old custom container version, you should retag it by its image ID. For automating this, I built a script with some handy variables to handle this handshake.
+Running the bash script for allowing clean rollbacks:
+In dir, one-time setup: `chmod +x rebuild-system-bootc.sh`
+Then just run `./rebuild-system-bootc.sh`
 
-In this setup, `rpm-ostree` is obsoleted for the most part except for seeing old deployments (although `bootc` can do this too). For example, to see deployments in `bootc` merely run `sudo bootc status` and to rollback to an older custom deployment it is as simple as `sudo bootc rollback`.
+This way, to update your system/change base system customizations you simply rebuild your `Containerfile` and if you keep it with the same tag (acting as a release channel), you merely may run `sudo bootc update`. Ultimately, to ensure you don't lose your old custom container version for rollback purposes, you should retag it by its image ID. For automating this, I built a script with some handy variables to handle this handshake, generally to be run in the same folder as the `Containerfile` for build purposes.
+
+In this setup, `rpm-ostree` is obsoleted for the most part except for seeing old deployments (although `bootc` can do this too). For example, to see deployments in `bootc` merely run `sudo bootc status` and to rollback to an older custom deployment it is as simple as `sudo bootc rollback`. Basically, ignore `rpm-ostree` as the flow has changed.
