@@ -24,6 +24,8 @@ Essentially the workflow is:
 8. future upgrades involve running a script to rebuild the OS anytime with rollbacks still supported easily: `./rebuild-system-bootc.sh`
 In script directory, there's a one-time setup: `chmod +x rebuild-system-bootc.sh`
 
+I have also included a convenience script called `check-bootc-base-image-update.sh` to check whether the base image has updated on the quay registry, it will also need `chmod`ing as above. You must define the image name in the `IMAGE` variable at the top of the script to check against, I default to using Kinoite as I do elsewhere in my repo.
+
 Aside, a useful command to see your /etc differences with base image: `sudo ostree admin config-diff`
 
 Note: all features implemented in the script could be done manually. In that case, in general, you start in project directory, rebuild the image with the initial build command, bootc update (assuming the tag is the same, run the switch command above for a new tag name) and retag the old image to ensure it doesn't get erased. You would then be in charge of any hanging images and being sure that things work as expected.
