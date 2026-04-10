@@ -16,11 +16,8 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
 
-# Your 'overlay' packages go here, including rpmfusion free (optional: non-free for myself with non-free-release) + removals/overrides
-# The section for weak dependencies could be removed and all folded into the regular install (where gparted is) if you don't care about cleaning weak deps
+# Your 'overlay' packages go here, including rpmfusion, removals/overrides, etc.
 # Cache cleanup is good because why write things that won't be useful?
-# Note the mozilla-openh264 install, manual override to Fedora 43's version as 44 doesn't have it yet
-# Swap toolbox and distrobox :D
 
 # Removals
 RUN dnf -y remove \
@@ -34,17 +31,21 @@ RUN dnf -y remove \
     dnf -y clean all
 
 # RPM fusion and drivers, codecs, and other base-system overrides -- non-free rpmfusion could also be put in the first line
+# ** Note: we install the mozilla-openh264 from F43 to have a working Firefox openh264 plugin, will be fixed soon
+# ** Note: commented mesa-va-drivers-freeworld since this package currently broken -- Fedora's default mesa are quite good, so no worries
+# ** Note: the default image doesn't include the @multimedia group so we manually install rather than rpmfusion's recommendation to update the group
 RUN dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    mesa-va-drivers-freeworld \
+    # mesa-va-drivers-freeworld \
     pipewire-codec-aptx && \
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
-    dnf -y update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf -y install @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
     dnf -y install mozilla-openh264 --releasever=43 && \
     dnf -y clean all
 
 # Additional apps (GUI, etc.), weak dependencies disabled except where useful
+# The section for weak dependencies could be removed and all folded into the regular install (where gparted is) if you don't care about cleaning weak deps
 RUN dnf -y install \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
@@ -62,13 +63,13 @@ RUN dnf -y install \
     dnf -y clean all
 
 # Custom services or none at all can go here as Fedora default-enables most.
-# Here I use my preference to secure sshd and enable tailscale :D, other
+# Here I use my preference to secure sshd by default-disabling and enable tailscale :D
 RUN systemctl enable tailscaled.service && \
     systemctl mask sshd.socket sshd.service
 
-# Here you can run any image-layer-level /etc overrides. Useful if you don't want to have to think about these.
+# Here you can run any image-layer-level /etc overrides. Useful if you don't want to have to think about these ever
 # For example, if needed, can set locale.conf with a default val: echo "LANG=\"en_US.UTF-8\"" > /etc/locale.conf
-# In general, not usually necessary for most people, but YMMV. You can always do these configs manually.
+# In general, not usually necessary for most people, but YMMV. You can always do these configs manually!
 RUN touch /etc/containers/nodocker && \
     echo "XMODIFIERS=@im=fcitx" >> /etc/environment && \
     echo "export XMODIFIERS=@im=fcitx" > /etc/profile.d/fcitx.sh
