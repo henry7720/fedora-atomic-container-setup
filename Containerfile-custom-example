@@ -16,11 +16,13 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
 
-# Your 'overlay' packages go here, including rpmfusion free (optional: non-free for myself) + removals
-# The section for weak dependencies could be removed and all folded into the regular install if you don't care about cleaning weak deps.
+# Your 'overlay' packages go here, including rpmfusion free (optional: non-free for myself with non-free-release) + removals/overrides
+# The section for weak dependencies could be removed and all folded into the regular install (where gparted is) if you don't care about cleaning weak deps
 # Cache cleanup is good because why write things that won't be useful?
 # Note the mozilla-openh264 install, manual override to Fedora 43's version as 44 doesn't have it yet
 # Swap toolbox and distrobox :D
+
+# Removals
 RUN dnf -y remove \
     krfb \
     kjournald \
@@ -29,10 +31,21 @@ RUN dnf -y remove \
     kde-connect \
     kcharselect \
     kfind && \
-    dnf -y install mozilla-openh264 --releasever=43 && \
+    dnf -y clean all
+
+# RPM fusion and drivers, codecs, and other base-system overrides -- non-free rpmfusion could also be put in the first line
+RUN dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    mesa-va-drivers-freeworld \
+    pipewire-codec-aptx && \
+    dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
+    dnf -y update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf -y install mozilla-openh264 --releasever=43 && \
+    dnf -y clean all
+
+# Additional apps (GUI, etc.), weak dependencies disabled except where useful
+RUN dnf -y install \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
     btrfs-assistant && \
@@ -43,7 +56,6 @@ RUN dnf -y remove \
     btop \
     tailscale \
     codium \
-    pipewire-codec-aptx \
     trash-cli \
     micro vim \
     java-devel && \
