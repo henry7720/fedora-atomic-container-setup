@@ -16,8 +16,7 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
 
-# Your 'overlay' packages go here, including rpmfusion free/non-free + removals
-# https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm - we override to 44 to force installs to work
+# Your 'overlay' packages go here, including rpmfusion free (optional: non-free for myself) + removals
 # The section for weak dependencies could be removed and all folded into the regular install if you don't care about cleaning weak deps.
 # Cache cleanup is good because why write things that won't be useful?
 # Note the mozilla-openh264 install, manual override to Fedora 43's version as 44 doesn't have it yet
@@ -33,7 +32,7 @@ RUN dnf -y remove \
     dnf -y install mozilla-openh264 --releasever=43 && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
     btrfs-assistant && \
