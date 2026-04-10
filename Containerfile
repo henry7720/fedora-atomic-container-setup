@@ -7,6 +7,9 @@ FROM quay.io/fedora/fedora-kinoite:44
 # Add your custom package overlays, rpmfusion can also go here
 # Since we're using bootc, we use standard dnf commands, you can just install and also swap toolbox for distrobox, etc.
 # Use -y for all dnf commands as it can't be interactive
+
+# I recommend following my template in Container-custom-example -- one RUN block for removals with a dnf clean all
+# one RUN block for hardware drivers and codecs (RPMFusion etc.) with a dnf clean all, and one RUN block for your GUI apps/extra CLI tools
 RUN dnf -y install \
     package-here && \
     dnf clean all -y
