@@ -16,24 +16,27 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
 
-# standard URL: https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm but force it to version to avoid bugs for prerelease
 # Your 'overlay' packages go here, including rpmfusion.
 # The section for weak dependencies could be removed and all folded into the regular install if you don't care about cleaning weak deps.
 # Cache cleanup is good because why write things that won't be useful?
-RUN dnf remove -y \
+# Note the mozilla-openh264 install, manual override for Fedora 44 not yet having it
+# Swap toolbox and distrobox :D
+RUN dnf -y remove \
     krfb \
     kjournald \
     kdebugsettings \
     kde-partitionmanager \
     kde-connect \
+    kcharselect \
     kfind && \
+    dnf -y install mozilla-openh264 --releasever=43 && \
+    dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
     btrfs-assistant && \
-    dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install --setopt=install_weak_deps=False \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     podman-compose podman-docker \
     k3b cdrskin \
     cjkuni-ukai-fonts cjkuni-uming-fonts jetbrains-mono-fonts \
@@ -44,7 +47,7 @@ RUN dnf remove -y \
     trash-cli \
     micro vim \
     java-devel && \
-    dnf clean all -y
+    dnf -y clean all
 
 # Custom services or none at all can go here as Fedora default-enables most.
 # Here I use my preference to secure sshd and enable tailscale :D, other 
