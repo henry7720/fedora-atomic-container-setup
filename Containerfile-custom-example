@@ -30,14 +30,17 @@ RUN dnf -y remove \
     kfind && \
     dnf -y clean all
 
-# RPM fusion and drivers, codecs, and other base-system overrides -- non-free rpmfusion could also be put in the first line
+# RPM fusion and drivers, codecs, and other base-system overrides
 # Notably, we include the mesa-drivers for AMD setups (not strictly needed) and pipewire aptx codec for bluetooth, besides standard ffmpeg swap and further multimedia install
 # ** Note: we install the mozilla-openh264 from F43 to have a working Firefox openh264 plugin, will be fixed soon
 # ** Note: the default image doesn't include the full, rpmfusion @multimedia group so we manually install rather than using rpmfusion's recommendation to update the group
-RUN dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm && \
+# ** Note: force mesa-va-drivers-freeworld to x86_64-only so dnf shuts up
+RUN dnf -y install \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    mesa-va-drivers-freeworld \
+    mesa-va-drivers-freeworld.x86_64 \
     pipewire-codec-aptx && \
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
