@@ -32,19 +32,22 @@ RUN dnf -y remove \
 
 # RPM fusion and drivers, codecs, and other base-system overrides
 # Notably, we include the mesa-drivers for AMD setups (not strictly needed) and pipewire aptx codec for bluetooth, besides standard ffmpeg swap and further multimedia install
-# ** Note: we install the mozilla-openh264 from F43 to have a working Firefox openh264 plugin, will be fixed soon
+# ** Note: we install mozilla-openh264 manually as it is not currently built-in to the image
 # ** Note: the default image doesn't include the full, rpmfusion @multimedia group so we manually install rather than using rpmfusion's recommendation to update the group
-# ** Note: force mesa-va-drivers-freeworld to x86_64-only so dnf shuts up
+# ** Note: We force rpmfusion to match version of the OS manually (F44) as it's pulling rawhide versions by default, which is breaking things, when that no longer happens, we will use:
+# RUN dnf -y install \
+#     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+#     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 RUN dnf -y install \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
-    mesa-va-drivers-freeworld.x86_64 \
-    pipewire-codec-aptx && \
+    mesa-va-drivers-freeworld \
+    pipewire-codec-aptx \
+    mozilla-openh264 && \
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
-    dnf -y install mozilla-openh264 --releasever=43 && \
     dnf -y clean all
 
 # Additional apps (GUI, etc.), weak dependencies disabled except where useful
