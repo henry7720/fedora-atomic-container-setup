@@ -41,13 +41,13 @@ RUN dnf -y remove \
 RUN dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm && \
-    dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y install \
     mesa-va-drivers-freeworld \
     pipewire-codec-aptx \
     mozilla-openh264 && \
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
+    dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y clean all
 
 # Additional apps (GUI, etc.), weak dependencies disabled except where useful
