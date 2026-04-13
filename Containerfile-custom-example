@@ -31,13 +31,12 @@ RUN dnf -y remove \
     dnf -y clean all
 
 # RPM fusion and drivers, codecs, and other base-system overrides
-# Notably, we include the mesa-drivers for AMD setups (not strictly needed) and pipewire aptx codec for bluetooth, besides standard ffmpeg swap and further multimedia install
+# Notably, we will include the mesa-drivers for AMD setups (not strictly needed) and pipewire aptx codec for bluetooth, besides standard ffmpeg swap and further multimedia install
 # ** Note: we install mozilla-openh264 manually as it is not currently built-in to the image
 # ** Note: the default image doesn't include the full, rpmfusion @multimedia group so we manually install rather than using rpmfusion's recommendation to update the group
-# ** Note: We force rpmfusion to match version of the OS manually (F44) as it's pulling rawhide versions by default, which is breaking things, when that no longer happens, we will use:
-# RUN dnf -y install \
-#     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-#     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+# ** Note: we force rpmfusion to match our release number manually as for some reason it's pulling rawhide repos (causing failing builds) if we do not
+# https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+#     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm &&
 RUN dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm && \
