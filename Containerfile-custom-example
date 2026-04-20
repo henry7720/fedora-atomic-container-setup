@@ -35,16 +35,17 @@ RUN dnf -y remove \
 # ** Note: we install mozilla-openh264 manually as it is not currently built-in to the image
 # ** Note: the default image doesn't include the full, rpmfusion @multimedia group so we manually install rather than using rpmfusion's recommendation to update the group
 # ** Note: we force rpmfusion to match our release number manually as for some reason it's pulling rawhide repos (causing failing builds) if we do not
-# https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-#     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm &&
+# Later, when things are in sync, we will use this again:
+# https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+# and https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 RUN dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm && \
+    dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install \
     mesa-va-drivers-freeworld \
     pipewire-codec-aptx \
     mozilla-openh264 && \
-    dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y clean all
@@ -63,7 +64,7 @@ RUN dnf -y install \
     tailscale \
     codium \
     trash-cli \
-    micro vim \
+    micro neovim \
     java-devel && \
     dnf -y clean all
 
