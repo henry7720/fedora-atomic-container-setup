@@ -64,7 +64,7 @@ RUN dnf -y install \
     tailscale \
     codium \
     trash-cli \
-    micro vim \
+    micro neovim \
     java-devel && \
     dnf -y clean all
 
