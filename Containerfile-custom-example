@@ -21,7 +21,7 @@ RUN dnf -y remove \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y clean all
 
-# Multimedia, codecs, drivers
+# Multimedia, codecs, drivers, you can add rocm if ever need
 RUN dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia && \
     dnf -y install \
