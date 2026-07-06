@@ -26,7 +26,7 @@ RUN dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia && \
     dnf -y install \
     mesa-va-drivers-freeworld \
-    pipewire-codec-aptx \
+    #pipewire-codec-aptx \ now comes by default
     mozilla-openh264 && \
     dnf -y clean all
 
@@ -43,8 +43,12 @@ RUN dnf -y install \
     trash-cli && \
     dnf -y clean all
 
-# Fonts and setup for custom copy
+# Themes, fonts and setup for custom copy
 RUN dnf -y install \
+    plasma-oxygen \
+    oxygen-cursor-themes \
+    oxygen-sounds \
+    oxygen-fonts \
     cjkuni-ukai-fonts \
     cjkuni-uming-fonts \
     jetbrains-mono-fonts \
