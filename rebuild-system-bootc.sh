@@ -15,8 +15,10 @@ export IMAGE="localhost/my-kinoite-image-name"
 export LATEST="${IMAGE}:latest"
 export PREVIOUS="${IMAGE}:previous"
 
-# Put your Containerfile's path here
-export CONTAINERFILE_PATH="/var/home/slackjeff/fedora-atomic-container-setup"
+# Set the absolute path to your bootc Containerfile project directory.
+# This directory should contain the Containerfile and related build files.
+# Example: /var/home/slackjeff/fedora-atomic-container-setup
+export CONTAINERFILE_PATH="/My/Path/Containerfile"
 
 # Colors
 fRed="\e[31;1m"
@@ -82,7 +84,7 @@ if [ -n "${UNSEATED_ID}" ] && [ "${UNSEATED_ID}" != "${OLD_LATEST}" ]; then
 fi
 
 #---- Finished
-msg_steps "->ed Cleaning up old images "
+msg_steps "->Cleaning up old images "
 sudo podman image prune -f
 
 echo -e "${fGreen}Done!${fEnd} If a bootc update was applied, you can reboot whenever you're ready."
