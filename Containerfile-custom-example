@@ -54,10 +54,12 @@ RUN dnf -y install \
     jetbrains-mono-fonts \
     impallari-raleway-fonts && \
     dnf -y clean all && \
-    mkdir -p /usr/share/fonts/jigmo-fonts
+    mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
 
-# Copy custom font
+# Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
 COPY ./Jigmo/*.ttf /usr/share/fonts/jigmo-fonts/
+COPY ./BuckeyeSans/*.otf /usr/share/fonts/buckeye-sans-fonts/
+COPY ./BuckeyeSerif/*.otf /usr/share/fonts/buckeye-serif-fonts/
 
 # Font setup, service setup, base-system default /etc changes
 RUN fc-cache -f && \
