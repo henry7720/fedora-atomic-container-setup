@@ -2,18 +2,22 @@
 FROM quay.io/fedora/fedora-kinoite:44
 
 # Add repos here before install
-# RUN tee ...repo contents here to go into repo file.... / 'dnf config-manager add repo' commands
+# RUN tee ...repo contents here to go into repo file.... / 'dnf config-manager add repo' commands / rpmfusion install
+# Recommend mounting caches as done below for RPMfusion*
 
 # Since we're using bootc, we use standard dnf commands, you can just install and also swap toolbox for distrobox, etc.
 # Use -y for all dnf commands as it can't be interactive
 # I recommend following my template in Container-custom-example -- one RUN block for removals, for hardware drivers and codecs (RPMFusion etc.) and for your GUI apps/extra CLI tools
 # We set a mount cache directory to map to the repo result cache dir so we can build faster and also spare some container size
 # The second dnf install setup expresses how to string together another dnf command with special options - this can be removed by removing the && and all that follows after it in that RUN block
-RUN --mount=type=cache,target=/var/cache/libdnf5 \
+# Keep the rm command to clean the temp files
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    --mount=type=cache,target=/var/lib/dnf,sharing=locked \
     dnf -y install \
     package-here && \
     dnf -y install --special-options \
-    package-here
+    package-here && \
+    rm -rf /var/tmp/* /tmp/*
 
 # Custom services enable/disable or none at all can go here as Fedora default-enables most. Stringing together with && is a good idea.
 # RUN systemctl enable non-default.service
