@@ -14,11 +14,11 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     krfb \
     kjournald \
     kdebugsettings \
-    kde-partitionmanager \
     kde-connect \
     kcharselect \
     kfind && \
     dnf -y swap toolbox distrobox --allowerasing && \
+    dnf -y swap kde-partitionmanager gparted --allowerasing && \
 # Multimedia, codecs, drivers, you can add rocm if ever need
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia && \
@@ -28,7 +28,6 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     mozilla-openh264 \
 # Add-ons - need all recommended packages
     virt-manager libayatana-appindicator-gtk3 \
-    gparted \
     btrfs-assistant && \
 # Themes, fonts and setup for custom copy weakdeps disabled where possible
     dnf install -y --setopt="install_weak_deps=False" \
