@@ -2,8 +2,7 @@
 FROM quay.io/fedora/fedora-kinoite:44
 
 # Add repos here before install
-# RUN tee ...repo contents here to go into repo file.... / 'dnf config-manager add repo' commands / rpmfusion install
-# Recommend mounting caches as done below for RPMfusion*
+# RUN tee ...repo contents here to go into repo file.... / 'dnf config-manager add repo' commands
 
 # Since we're using bootc, we use standard dnf commands, you can just install and also swap toolbox for distrobox, etc.
 # Use -y for all dnf commands as it can't be interactive
