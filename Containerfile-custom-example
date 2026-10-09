@@ -7,10 +7,8 @@ FROM quay.io/fedora/fedora-kinoite:44
 RUN dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
-    dnf -y clean all
-
 # Removals and swaps
-RUN dnf -y remove \
+    dnf -y remove \
     krfb \
     kjournald \
     kdebugsettings \
@@ -19,22 +17,24 @@ RUN dnf -y remove \
     kcharselect \
     kfind && \
     dnf -y swap toolbox distrobox --allowerasing && \
-    dnf -y clean all
-
 # Multimedia, codecs, drivers, you can add rocm if ever need
-RUN dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
+    dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia && \
     dnf -y install \
     mesa-va-drivers-freeworld \
     #pipewire-codec-aptx \ now comes by default
     mozilla-openh264 && \
-    dnf -y clean all
-
 # Add-ons, weakdeps used where possible except avoid breaking usability
-RUN dnf -y install \
+    dnf -y install \
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
-    btrfs-assistant && \
+    btrfs-assistant \
+# Themes, fonts and setup for custom copy
+    plasma-oxygen oxygen-cursor-themes oxygen-sounds oxygen-fonts \
+    cjkuni-ukai-fonts cjkuni-uming-fonts \
+    filezilla \
+    #impallari-raleway-fonts \ no longer needed
+    jetbrains-mono-fonts && \
     dnf install -y --setopt="install_weak_deps=False" \
     podman-compose podman-docker \
     k3b cdrskin \
@@ -42,19 +42,7 @@ RUN dnf -y install \
     tailscale \
     trash-cli && \
     dnf -y clean all
-
-# Themes, fonts and setup for custom copy
-RUN dnf -y install \
-    plasma-oxygen \
-    oxygen-cursor-themes \
-    oxygen-sounds \
-    oxygen-fonts \
-    cjkuni-ukai-fonts \
-    cjkuni-uming-fonts \
-    jetbrains-mono-fonts \
-    impallari-raleway-fonts && \
-    dnf -y clean all && \
-    mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
+#mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
 COPY ./Jigmo/*.ttf /usr/share/fonts/jigmo-fonts/
@@ -62,7 +50,7 @@ COPY ./BuckeyeSans/*.otf /usr/share/fonts/buckeye-sans-fonts/
 COPY ./BuckeyeSerif/*.otf /usr/share/fonts/buckeye-serif-fonts/
 
 # Font setup, service setup, base-system default /etc changes
-RUN fc-cache -f && \
+RUN fc-cache -f /usr/share/fonts/ && \
     systemctl enable tailscaled.service && \
     systemctl mask sshd.socket sshd.service && \
     touch /etc/containers/nodocker && \
