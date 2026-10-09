@@ -6,8 +6,8 @@ FROM quay.io/fedora/fedora-kinoite:44
 
 # Since we're using bootc, we use standard dnf commands, you can just install and also swap toolbox for distrobox, etc.
 # Use -y for all dnf commands as it can't be interactive
-# I recommend following my template in Container-custom-example -- one RUN block for removals, one block for hardware drivers and codecs (RPMFusion etc.) and one for your GUI apps/extra CLI tools
-# We set a cache directory to map to the repo result cache dir so we can build faster and also spare some container size
+# I recommend following my template in Container-custom-example -- one RUN block for removals, for hardware drivers and codecs (RPMFusion etc.) and for your GUI apps/extra CLI tools
+# We set a mount cache directory to map to the repo result cache dir so we can build faster and also spare some container size
 # The second dnf install setup expresses how to string together another dnf command with special options - this can be removed by removing the && and all that follows after it in that RUN block
 RUN --mount=type=cache,target=/var/cache/libdnf5 \
     dnf -y install \
