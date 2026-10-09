@@ -25,19 +25,18 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     dnf -y install \
     mesa-va-drivers-freeworld \
     #pipewire-codec-aptx \ now comes by default
-    mozilla-openh264 && \
-# Add-ons, weakdeps used where possible except avoid breaking usability
-    dnf -y install \
+    mozilla-openh264 \
+# Add-ons - need all recommended packages
     virt-manager libayatana-appindicator-gtk3 \
     gparted \
-    btrfs-assistant \
-# Themes, fonts and setup for custom copy
+    btrfs-assistant && \
+# Themes, fonts and setup for custom copy weakdeps disabled where possible
+    dnf install -y --setopt="install_weak_deps=False" \
     plasma-oxygen oxygen-cursor-themes oxygen-sounds oxygen-fonts \
     cjkuni-ukai-fonts cjkuni-uming-fonts \
     filezilla \
     #impallari-raleway-fonts \ no longer needed
-    jetbrains-mono-fonts && \
-    dnf install -y --setopt="install_weak_deps=False" \
+    jetbrains-mono-fonts \
     podman-compose podman-docker \
     k3b cdrskin \
     btop \
