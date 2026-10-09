@@ -4,7 +4,8 @@ FROM quay.io/fedora/fedora-kinoite:44
 # Since we're using bootc, we use standard dnf commands
 
 # External repos go here, set dnf repo cache merely as cache
-RUN --mount=type=cache,target=/var/cache/libdnf5 \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    --mount=type=cache,target=/var/lib/dnf,sharing=locked \
     dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
@@ -41,7 +42,8 @@ RUN --mount=type=cache,target=/var/cache/libdnf5 \
     k3b cdrskin \
     btop \
     tailscale \
-    trash-cli
+    trash-cli && \
+    rm -rf /var/tmp/* /tmp/*
 #mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
@@ -50,7 +52,7 @@ COPY ./BuckeyeSans/*.otf /usr/share/fonts/buckeye-sans-fonts/
 COPY ./BuckeyeSerif/*.otf /usr/share/fonts/buckeye-serif-fonts/
 
 # Font setup, service setup, base-system default /etc changes
-RUN fc-cache -f /usr/share/fonts/ && \
+RUN fc-cache -f /usr/share/fonts/{jigmo,buckeye-{sans,serif}}-fonts && \
     systemctl enable tailscaled.service && \
     systemctl mask sshd.socket sshd.service && \
     touch /etc/containers/nodocker && \
