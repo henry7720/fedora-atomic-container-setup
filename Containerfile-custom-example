@@ -3,8 +3,9 @@ FROM quay.io/fedora/fedora-kinoite:44
 
 # Since we're using bootc, we use standard dnf commands
 
-# External repos go here
-RUN dnf -y install \
+# External repos go here, set dnf repo cache merely as cache
+RUN --mount=type=cache,target=/var/cache/libdnf5 \
+    dnf -y install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
 # Removals and swaps
@@ -40,8 +41,7 @@ RUN dnf -y install \
     k3b cdrskin \
     btop \
     tailscale \
-    trash-cli && \
-    dnf -y clean all
+    trash-cli
 #mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
