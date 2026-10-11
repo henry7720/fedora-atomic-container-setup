@@ -5,44 +5,43 @@ FROM quay.io/fedora/fedora-kinoite:44
 
 # External repos go here, set dnf repo cache merely as cache
 RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    --mount=type=cache,target=/var/lib/dnf,sharing=locked \
     dnf -y --refresh install \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
 # Removals and swaps
     dnf -y remove \
-    krfb \
-    kjournald \
-    kdebugsettings \
-    kde-connect \
-    kcharselect \
-    kfind && \
+        krfb \
+        kjournald \
+        kdebugsettings \
+        kde-connect \
+        kcharselect \
+        kfind && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y swap kde-partitionmanager gparted --allowerasing && \
-# Multimedia, codecs, drivers, you can add rocm if ever need
+# Multimedia, ffmpeg, drivers, you can add rocm if ever need
     dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
-    dnf -y install --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia && \
     dnf -y install \
-    mesa-va-drivers-freeworld \
-    #pipewire-codec-aptx \ now comes by default
-    mozilla-openh264 \
+        mesa-va-drivers-freeworld \
+        mozilla-openh264 \
 # Add-ons - need all recommended packages
-    virt-manager libayatana-appindicator-gtk3 \
-    btrfs-assistant && \
-# Themes, fonts and setup for custom copy weakdeps disabled where possible
-    dnf install -y --setopt="install_weak_deps=False" \
-    plasma-oxygen oxygen-cursor-themes oxygen-sounds oxygen-fonts \
-    cjkuni-ukai-fonts cjkuni-uming-fonts \
-    filezilla \
-    #impallari-raleway-fonts \ no longer needed
-    jetbrains-mono-fonts \
-    podman-compose podman-docker \
-    k3b cdrskin \
-    btop \
-    tailscale \
-    trash-cli && \
+        virt-manager libayatana-appindicator-gtk3 \
+        btrfs-assistant && \
+# Codecs Themes, fonts and setup for custom copy weakdeps disabled where possible
+    dnf -y install \
+        --setopt="install_weak_deps=False" \
+        --exclude=PackageKit-gstreamer-plugin \
+        @multimedia \
+        plasma-oxygen oxygen-cursor-themes oxygen-sounds \
+        # oxygen-fonts NOT NEEDED
+        cjkuni-ukai-fonts cjkuni-uming-fonts \
+        filezilla \
+        jetbrains-mono-fonts \
+        podman-compose podman-docker \
+        k3b cdrskin \
+        btop \
+        tailscale \
+        trash-cli && \
     rm -rf /var/tmp/* /tmp/*
-#mkdir -p /usr/share/fonts/{jigmo,buckeye-sans,buckeye-serif}-fonts
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
 COPY ./Jigmo/*.ttf /usr/share/fonts/jigmo-fonts/
