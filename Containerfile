@@ -11,7 +11,6 @@ FROM quay.io/fedora/fedora-kinoite:44
 # The second dnf install setup expresses how to string together another dnf command with special options - this can be removed by removing the && and all that follows after it in that RUN block
 # Keep the rm command to clean the temp files
 RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    --mount=type=cache,target=/var/lib/dnf,sharing=locked \
     dnf -y install \
     package-here && \
     dnf -y install --special-options \
@@ -22,7 +21,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
 # RUN systemctl enable non-default.service
 
 # Here you can run any image-layer-level /etc overrides. Useful if you don't want to have to think about these or have a specific need.
-# In general, not stroct;y necessary , but YMMV. You can always do these configs manually.
+# In general, not strictly necessary , but YMMV. You can always do these configs manually.
 # RUN echo "some-content" > /etc/some-default-os-config
 
 # Important: Label the image as bootc-compatible
