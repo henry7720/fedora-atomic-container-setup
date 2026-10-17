@@ -5,9 +5,10 @@ FROM quay.io/fedora/fedora-kinoite:44
 
 # External repos go here, set dnf repo cache merely as cache
 RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo && \
     dnf -y --refresh install \
-        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+        https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm && \
+   #     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
 # Removals and swaps
     dnf -y remove \
         krfb \
@@ -15,22 +16,25 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         kdebugsettings \
         kde-connect \
         kcharselect \
-        kfind && \
+        kfind \
+        firefox && \
     dnf -y swap toolbox distrobox --allowerasing && \
     dnf -y swap kde-partitionmanager gparted --allowerasing && \
 # Multimedia, ffmpeg, drivers, you can add rocm if ever need
-    dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
+    # dnf -y swap ffmpeg-free ffmpeg --allowerasing && \
     dnf -y install \
-        mesa-va-drivers-freeworld \
-        mozilla-openh264 \
+    #    mesa-va-drivers-freeworld \
+    #    mozilla-openh264 \
 # Add-ons - need all recommended packages
         virt-manager libayatana-appindicator-gtk3 \
         btrfs-assistant && \
 # Codecs Themes, fonts and setup for custom copy weakdeps disabled where possible
     dnf -y install \
         --setopt="install_weak_deps=False" \
-        --exclude=PackageKit-gstreamer-plugin \
-        @multimedia \
+        # --exclude=PackageKit-gstreamer-plugin \
+        # @multimedia \
+        #bluetooth support
+        pipewire-codec-aptx \
         plasma-oxygen oxygen-cursor-themes oxygen-sounds \
         # oxygen-fonts NOT NEEDED
         cjkuni-ukai-fonts cjkuni-uming-fonts \
@@ -39,8 +43,8 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         podman-compose podman-docker \
         k3b cdrskin \
         btop \
-        tailscale \
-        trash-cli && \
+        tailscale && \
+        # trash-cli && \
     rm -rf /var/tmp/* /tmp/*
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
