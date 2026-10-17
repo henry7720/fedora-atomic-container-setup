@@ -21,21 +21,24 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         plasma-desktop \
         glibc-langpack-en \
         kdegraphics-thumbnailers kio-admin qrca thermald unrar xsettingsd \
+        kinfocenter \
         konsole \
-        plasma-nm NetworkManager-wifi \
-        virt-manager libvirt-daemon-kvm libvirt-daemon-config-network libayatana-appindicator-gtk3 \
+        plasma-nm plasma-nm-openvpn NetworkManager-wifi NetworkManager-config-connectivity-fedora \
+        virt-manager libvirt-daemon-kvm libvirt-daemon-config-network libayatana-appindicator-gtk3 libappindicator-gtk3 \
         btrfs-assistant btrfsmaintenance snapper \
         plasma-discover plasma-discover-flatpak \
         pam-kwallet \
-        plasma-pa bluedevil pipewire pipewire-pulseaudio wireplumber pipewire-codec-aptx \
+        plasma-pa bluedevil pipewire pipewire-alsa alsa-sof-firmware alsa-ucm pipewire-pulseaudio wireplumber pipewire-codec-aptx \
         powerdevil upower tuned tuned-ppd \
         plasma-print-manager cups cups-browsed cups-filters-driverless ipp-usb nss-mdns \
         firewalld plasma-firewall plasma-firewall-firewalld \
         dolphin dolphin-plugins ffmpegthumbs qt6-qtimageformats kf6-kimageformats \
         plasma-login-manager \
         fprintd fprintd-pam \
-        ark \
+        colord-kde kscreen \
+        ark spectacle \
         bash-color-prompt \
+        systemd-oomd-defaults \
         breeze-gtk kde-gtk-config plasma-oxygen oxygen-cursor-themes oxygen-sounds \
         # oxygen-fonts NOT NEEDED, vf-fonts used on noto-serif to save some space
         jetbrains-mono-fonts google-noto-sans-cjk-fonts google-noto-serif-cjk-vf-fonts cjkuni-ukai-fonts cjkuni-uming-fonts \
@@ -46,7 +49,8 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         k3b cdrskin \
         btop \
         gparted \
-        tailscale
+        tailscale && \
+        rpm -e --nodeps kmenuedit
 
 # Copy custom fonts / Jigmo for Chinese, Buckeye for OSU purposes
 COPY ./Jigmo/*.ttf /usr/share/fonts/jigmo-fonts/
