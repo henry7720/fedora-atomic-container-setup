@@ -31,7 +31,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         plasma-pa bluedevil pipewire pipewire-alsa alsa-sof-firmware alsa-ucm pipewire-pulseaudio wireplumber pipewire-codec-aptx \
         powerdevil upower tuned tuned-ppd \
         plasma-print-manager cups cups-browsed cups-filters-driverless ipp-usb nss-mdns \
-        firewalld plasma-firewall plasma-firewall-firewalld \
+        firewalld firewall-config \
         dolphin dolphin-plugins ffmpegthumbs qt6-qtimageformats kf6-kimageformats \
         plasma-login-manager \
         fprintd fprintd-pam \
