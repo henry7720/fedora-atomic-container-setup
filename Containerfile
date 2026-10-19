@@ -4,6 +4,8 @@ FROM quay.io/fedora/fedora-kinoite:44
 # Add repos here before install
 # RUN tee ...repo contents here... to go into repo file/curl download... / 'dnf config-manager add repo' commands
 
+# Add any custom COPY commands here, say for fonts
+
 # I recommend following one RUN block for removals, for hardware drivers and codecs (RPMFusion etc.) and for your GUI apps/extra CLI tools
 # Since we're using bootc, we use standard dnf commands, you can just install and also swap toolbox for distrobox, etc.
 # Use -y for all dnf commands as it can't be interactive
@@ -15,6 +17,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/tmp \
     --mount=type=tmpfs,target=/var/log \
+    --mount=type=tmpfs,target=/root/.cache \
     dnf -y install \
     package-here && \
     dnf -y install --special-options \
