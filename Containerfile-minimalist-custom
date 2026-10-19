@@ -17,7 +17,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm && \
     # The mass install!
     dnf install -y --setopt="install_weak_deps=False" \
-        mesa-vulkan-drivers-freeworld mesa-dri-drivers mesa-va-drivers-freeworld \
+        ffmpeg mesa-vulkan-drivers-freeworld mesa-dri-drivers mesa-va-drivers-freeworld \
         plasma-desktop \
         glibc-langpack-en \
         kdegraphics-thumbnailers kio-admin qrca thermald unrar xsettingsd \
