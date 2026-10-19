@@ -1,4 +1,4 @@
-# Start from the official Fedora 44 Kinoite OCI image
+# Start from the official Fedora 44 Kinoite OCI image OR fedora-bootc (headless/custom minimal desktop: see the Containerfile-minimalist-custom)
 FROM quay.io/fedora/fedora-kinoite:44
 
 # Add repos here before install
